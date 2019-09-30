@@ -11,4 +11,6 @@ ___
 ### How to play
 ```bash
 clone it and open the html file
+
+(play)['http://wanyekitetris.netlify.com']
 ```
