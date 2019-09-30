@@ -13,4 +13,4 @@ ___
 clone it and open the html file
 or click below
 ```
-[play the game](http://wanyekitetris.netrify.com)
+[play the game](http://wanyekitetris.netlify.com)
