@@ -283,4 +283,18 @@ document.querySelector('body').addEventListener('keydown',e=>{
     console.log(e.key)
 })
 
+let touch_startx=0
+document.querySelector('body').addEventListener('touchstart',e=>{
+    touch_startx=e.changedTouches[0].clientX
+    console.log(touch_startx)
+});
+document.querySelector('body').addEventListener('touchend',e=>{
+   let end=e.changedTouches[0].clientX
+    if(end-touch_startx<0){
+        move_left()
+    }else if(end-touch_startx>0){
+        move_right()
+    }
+    console.log(end)
+})
 //wanyeki
