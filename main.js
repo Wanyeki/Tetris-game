@@ -3,10 +3,56 @@ screen=document.querySelector('.screen');
 screen2=document.querySelector('.screen2');
 score=0;
 ocupied=[];
+let all_shapes=[
+   {id: 'line_',
+    positions:[16,17,18,19],
+    rotate:[]
+    },
+    {id: 'line_s',
+    shape:1,
+    positions:[6,18,30,42],
+    rotate:[]
+    },
+    {id: 'el',
+    positions:[6,18,30,31],
+    rotate:[]
+    },
+    {id: 'el_s',
+    positions:[16,18,17,28],
+    rotate:[]
+    },
+    {id: 'el_op',
+    positions:[6,18,30,5],
+    rotate:[]
+    },
+    {id: 'el_up',
+    positions:[16,18,30,17],
+    rotate:[]
+    },
+    {id: 'tee_',
+    positions:[6,17,4,5],
+    rotate:[]
+    },
+    {id: 'tee_l',
+    positions:[29,17,18,5],
+    rotate:[]
+    },
+    {id: 'tee_r',
+    positions:[18,6,30,17],
+    rotate:[]
+    },
+    {id: 'tee_u',
+    positions:[18,16,5,17],
+    rotate:[]
+    },
+ 
+]
 class square{
     constructor(pos){
-    this.x=pos<12 ? (20*pos)+(3*(pos+1)):(20*(pos-12))+(3*(pos-11));
-    this.y=pos<12 ? 3 : 26;
+    let rem=pos % 12;
+    let times=Math.floor(pos/12)
+    this.x= (20*rem)+(3*(rem+1))
+    this.y= (20*times)+(3*(times+1))
     this.pos=pos;
     
     }
@@ -37,45 +83,16 @@ class square{
 
 
 function generate_shape(){
-    let id=Math.floor(Math.random()*4);
-    // let id=0;
+    let id=Math.floor(Math.random()*all_shapes.length);
+    //  id=2;
     let squares=[];
-    switch (id){
-        case 0:
-            squares[0]=new square(16);
-            squares[1]=new square(17);
-            squares[2]=new square(18);
-            squares[3]=new square(19);
-            squares[4]=0;
-            squares[5]=generate_color();
-         break
-        case 1:
-                squares[0]=new square(4);
-                squares[1]=new square(5);
-                squares[2]=new square(6);
-                squares[3]=new square(17);
-                squares[4]=1;
-                squares[5]=generate_color();
-        break
-        case 2:
-                squares[0]=new square(18);
-                squares[1]=new square(5);
-                squares[2]=new square(6);
-                squares[3]=new square(17);
-                squares[4]=2;
-                squares[5]=generate_color();
-        break
-        case 3:
-                squares[0]=new square(4);
-                squares[1]=new square(5);
-                squares[2]=new square(6);
-                squares[3]=new square(18);
-                squares[4]=4;
-                squares[5]=generate_color();
-                
-        break
-        
-    }
+    let the_shape=all_shapes[id];
+    the_shape.positions.forEach(sq=>{
+        squares.push(new square(sq))
+    })
+    squares.push(id)
+    squares.push(generate_color())
+  
     return squares;
 
 }
@@ -101,9 +118,13 @@ function generate_color(){
 
  let next=generate_shape();
  let next_next=generate_shape();
+
 draw_next_next();
+
  height=3;
+
  let last_placable_box=[];
+
  for(i=288;i<299;i++){
      last_placable_box[i]=true;
  }
@@ -113,7 +134,7 @@ draw_next_next();
  function draw_next_next(){
     for(i=0;i<4;i++){
         prev=document.querySelector('.nxt_box'+i);
-        prev!=null?screen2.removeChild(prev):console.log('');
+        prev!=null?screen2.removeChild(prev):false;
         box2=document.createElement('div');
         box2.classList.add('nxt_box'+i);
         box2.style.cssText='height:20px; width:20px; position:absolute; background:'+next_next[5]+'; left:'+(next_next[i].x-49)+'px; top:'+next_next[i].y+'px;';
@@ -130,7 +151,7 @@ function play(){
   if(!stop_movement){
   for(i=0;i<4;i++){
       prev=document.querySelector('.box_'+i+'_'+shape);
-      prev!=null?screen.removeChild(prev):console.log('');
+      prev!=null?screen.removeChild(prev):false;
       box=document.createElement('div');
       box.classList.add('box_'+i+'_'+shape);
       box.setAttribute('id','position_'+next[i].pos);
@@ -167,19 +188,25 @@ setInterval(play,250);
 
 width=0;
 let llock=false,rlock=false;
-document.querySelector('.right').addEventListener('click', function(){
-   let lock_change=rlock;
-   llock=false;
-  for(j=0;j<4;j++){
-       if(next[j].moveright(rlock)){
-         lock_change=true
-       }
-    
-  }
-   rlock=lock_change;
-
+document.querySelector('.right').addEventListener('click',e=>{
+move_right()
 });
-document.querySelector('.left').addEventListener('click', function(){
+function move_right(){
+    let lock_change=rlock;
+    llock=false;
+   for(j=0;j<4;j++){
+        if(next[j].moveright(rlock)){
+          lock_change=true
+        }
+     
+   }
+    rlock=lock_change;
+ 
+ }
+document.querySelector('.left').addEventListener('click',e=>{
+    move_left()
+});
+function move_left(){
     let lock_change=llock;
    rlock=false;
   for(j=0;j<4;j++){
@@ -190,7 +217,7 @@ document.querySelector('.left').addEventListener('click', function(){
     
   }
    llock=lock_change;
-});
+}
 
 function givescore(){
     for(i=299;i>0;i=i-12){
@@ -230,7 +257,7 @@ function clearline(start){
         if(y!=null){
            tops=find_y(i);
            tops+=23;
-           console.log(tops);
+        //    console.log(tops);
            y.style.top=tops+'px';
            y.setAttribute('id','position_'+(i+12))
 
@@ -243,5 +270,14 @@ function find_y(pos){
     return (20*(height-1)+3*height);
 
 }
+
+document.querySelector('body').addEventListener('keydown',e=>{
+    if(e.key=='ArrowLeft'){
+        move_left()
+    }else if(e.key=='ArrowRight'){
+        move_right()
+    }
+    console.log(e.key)
+})
 
 //wanyeki
