@@ -45,7 +45,10 @@ let all_shapes=[
     positions:[18,16,5,17],
     rotate:[]
     },
- 
+    {id: 'box',
+    positions:[18,6,5,17],
+    rotate:[]
+    },
 ]
 class square{
     constructor(pos){
